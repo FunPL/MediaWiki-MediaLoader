@@ -1,0 +1,47 @@
+{
+	"name": "MediaLoader",
+	"author": [
+		"FunPL"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:MediaLoader",
+	"descriptionmsg": "Plugin adding Media Loaders for optimization.",
+	"license-name": "GPL-2.0-or-later",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.32.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\MediaLoader\\": "includes/"
+	},
+	"AutoloadClasses":{
+		"SpecialMediaLoaderSyntax": "src/MediaLoaderSyntax.php",
+		"MediaLoaderPHP": "MediaLoader.php"
+	},
+	"config": {
+		"MediaLoaderLoadText":"Load ",
+		"MediaLoaderUnloadText":"Unload "
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "MediaLoaderPHP::onParserFirstCallInit",
+		"BeforePageDisplay": "MediaLoaderPHP::onBeforePageDisplay"
+	},
+	"MessagesDirs": {
+		"MediaLoader": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"ext.mediaLoader": {
+			"scripts": ["common.js"],
+			"styles": ["common.css"]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "CategoryTree/modules"
+	},
+	"SpecialPages": {
+		"MediaLoaderSyntax": "SpecialMediaLoaderSyntax"
+	},
+	"manifest_version": 1
+}
