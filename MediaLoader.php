@@ -139,6 +139,20 @@ class MediaLoaderPHP {
 				$loop = "loop";
 			}
 
+			if(!isset($args["width"])){
+				$width = "";
+			}
+			else{
+				$width = "width='".$args["width"]."'";
+			}
+
+			if(!isset($args["height"])){
+				$height = "";
+			}
+			else{
+				$height = "height='".$args["height"]."'";
+			}
+
 			if(!isset($args["args"])){
 				$uargs = "";
 			}
@@ -155,9 +169,7 @@ class MediaLoaderPHP {
 				}
 				else{
 					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' image='$readyimage' setto='$wgMediaLoaderLoadText$name'>
-					<div class='MediaLoadText'>$wgMediaLoaderLoadText$name<br></div>
-					<div class='MediaUnloadText'>$wgMediaLoaderUnloadText$name<br></div>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' type='image' group='$group' image='$readyimage' loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
 					<div class='MediaLinkText'>$mediaoutput</div>
 					</div>
 					</div>";
@@ -171,9 +183,7 @@ class MediaLoaderPHP {
 				}
 				else{
 					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' src='$href' volume='$volume' $loop>
-					<div class='MediaLoadText'>$wgMediaLoaderLoadText$name<br></div>
-					<div class='MediaUnloadText'>$wgMediaLoaderUnloadText$name<br></div>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
 					<div class='MediaLinkText'>$mediaoutput</div>
 					</div>";
 				}
@@ -181,14 +191,12 @@ class MediaLoaderPHP {
 			if($filetype == "video"){
 				if(!$load){
 					return "<div class='MediaLoaderOuter'>
-					<video class='MediaLoader MediaLoaderVideo MediaLoaderToSet' src='$href' volume='$volume' controls $loop></video>
+					<video class='MediaLoader MediaLoaderVideo MediaLoaderToSet' src='$href' volume='$volume' controls $loop $width $height></video>
 					</div>";
 				}
 				else{
 					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' src='$href' volume='$volume' $loop setto='$wgMediaLoaderLoadText$name'>
-					<div class='MediaLoadText'>$wgMediaLoaderLoadText$name<br></div>
-					<div class='MediaUnloadText'>$wgMediaLoaderUnloadText$name<br></div>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
 					<div class='MediaLinkText'>$mediaoutput</div>
 					</div>";
 				}
