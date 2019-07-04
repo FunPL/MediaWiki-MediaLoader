@@ -7,7 +7,7 @@ function error(String $msg, Parser $parser, PPFrame $frame){
 }
 class MediaLoaderPHP {
 	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
-		require 'vendor\ivopetkov\html5-dom-document-php\autoload.php';
+		require 'html5-dom-document-php\autoload.php';
 		$output = $out->getOutput();
 		$output->addModules( 'ext.mediaLoader' );
 		$output->addModuleStyles('ext.mediaLoader');
@@ -16,7 +16,8 @@ class MediaLoaderPHP {
 		$dom->loadHTML($html);
 		$node = $dom->querySelector('#file');
 		$node2 = $dom->querySelector('.fullMedia');
-		if($node != null && $node2 != null){
+		$pagetitle = $output->getPageTitle();
+		if($node != null && $node2 != null && substr($pagetitle, 0, 5) == "File:"){
 			$node2child = $node2->querySelector('.internal');
 			if($node2child == null){
 				return;
