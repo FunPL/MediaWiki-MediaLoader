@@ -7,7 +7,7 @@
 	"descriptionmsg": "medialoader_desc",
 	"license-name": "GPL-2.0-or-later",
 	"type": "parserhook",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"requires": {
 		"MediaWiki": ">= 1.32.0"
 	},
@@ -34,7 +34,11 @@
 	"ResourceModules": {
 		"ext.mediaLoader": {
 			"scripts": ["common.js"],
-			"styles": ["common.css"]
+			"styles": ["common.css"],
+			"targets": [
+				"desktop",
+				"mobile"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
