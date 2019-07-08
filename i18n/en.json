@@ -4,5 +4,6 @@
 			"FunPL"
 		]
 	},
-	"medialoadersyntax": "Media Loader Syntax"
+	"medialoadersyntax": "Media Loader Syntax",
+	"medialoader_desc":"Plugin adding Media Loaders for optimization."
 }

@@ -7,18 +7,19 @@ function error(String $msg, Parser $parser, PPFrame $frame){
 }
 class MediaLoaderPHP {
 	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
-		require 'html5-dom-document-php\autoload.php';
 		$output = $out->getOutput();
 		$output->addModules( 'ext.mediaLoader' );
 		$output->addModuleStyles('ext.mediaLoader');
 		$html = $output->getHTML();
-		$dom = new IvoPetkov\HTML5DOMDocument();
+		$dom = new DOMDocument;
+		libxml_use_internal_errors(true);
 		$dom->loadHTML($html);
-		$node = $dom->querySelector('#file');
-		$node2 = $dom->querySelector('.fullMedia');
+		libxml_clear_errors();
+		$node = $dom->getElementById('file');
+		$node2 = $dom->nextSibling;
 		$pagetitle = $output->getPageTitle();
 		if($node != null && $node2 != null && substr($pagetitle, 0, 5) == "File:"){
-			$node2child = $node2->querySelector('.internal');
+			$node2child = $node2->firstChild;
 			if($node2child == null){
 				return;
 			}
@@ -28,7 +29,7 @@ class MediaLoaderPHP {
 				'wav' => 'audio',
 				'mp4' => 'video'
 			);
-			$child = $node->childNodes[0];
+			$child = $node->firstChild;
 			if($child == null){return;}
 			$href = $child->getAttribute("href");
 			if($href == null){return;}
@@ -38,20 +39,20 @@ class MediaLoaderPHP {
 				return;
 			}
 			$filetype = $allowedtypes[$fileext];
-			$node->outerHTML = "";
+			$node->textContent = "";
 			if($filetype == "audio"){
-				$node2child->outerHTML = "<div class='MediaLoaderOuter'>
+				$node2child->textContent = "<div class='MediaLoaderOuter'>
 					<audio class='MediaLoader MediaLoaderAudio' src='$href' controls></audio>
 					</div>";
-				$readyhtml = $dom->saveHTML($dom->querySelector('body'));
+				$readyhtml = $dom->saveHTML($dom->getElementsByTagName("body")[0]->textContent);
 				$output->clearHTML();
 				$output->addHTML(substr($readyhtml, 6, strlen($readyhtml)-13));
 			}
 			if($filetype == "video"){
-				$node2child->outerHTML = "<div class='MediaLoaderOuter'>
+				$node2child->textContent = "<div class='MediaLoaderOuter'>
 					<video class='MediaLoader MediaLoaderAudio' src='$href' controls width='500px'></video>
 					</div>";
-				$readyhtml = $dom->saveHTML($dom->querySelector('body'));
+				$readyhtml = $dom->saveHTML($dom->getElementsByTagName("body")[0]->textContent);
 				$output->clearHTML();
 				$output->addHTML(substr($readyhtml, 6, strlen($readyhtml)-13));
 			}

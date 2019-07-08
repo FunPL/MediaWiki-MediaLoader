@@ -12,9 +12,23 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		# Get request data from, e.g.
 		$param = $request->getText( 'param' );
 
+		$version = file_get_contents("https://raw.githubusercontent.com/FunPL/MediaWiki-MediaLoader/master/version.txt");
+
+		if(isset($version)){
+			if($version == "0.3"){
+				$update = "";
+			}
+			else{
+				$update = "<b>There is a new version of MediaLoader available at [https://github.com/FunPL/MediaWiki-MediaLoader/releases/latest GitHub]</b>\n";
+			}
+		}
+		else{
+			$update = "";
+		}
+
 		# Do stuff
 		# ...
-		$wikitext = ' <nowiki><media>File:example.png</media></nowiki>
+		$wikitext = $update.' <nowiki><media>File:example.png</media></nowiki>
 
 		<h2>Parameters</h2>
 		

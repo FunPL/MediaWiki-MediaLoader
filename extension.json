@@ -4,9 +4,10 @@
 		"FunPL"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:MediaLoader",
-	"descriptionmsg": "Plugin adding Media Loaders for optimization.",
+	"descriptionmsg": "medialoader_desc",
 	"license-name": "GPL-2.0-or-later",
-	"type": "other",
+	"type": "parserhook",
+	"version": "0.2 (modified)",
 	"requires": {
 		"MediaWiki": ">= 1.32.0"
 	},
