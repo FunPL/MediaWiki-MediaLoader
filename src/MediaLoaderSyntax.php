@@ -60,6 +60,8 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		| loop || Loop || <nowiki><media loop>File:example.mp3</media></nowiki>
 		|-
 		| width/height || Width/Height of the video file || <nowiki><media width="1000" height="400">File:example.mp4</media></nowiki> 
+		|-
+		| autoplay || May not work without load due to browser rules || <nowiki><media autoplay>File:example.mp4</media></nowiki> 
 		|}
 		';
 		$output->setPageTitle("Media Loader Syntax");

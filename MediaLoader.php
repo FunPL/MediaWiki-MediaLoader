@@ -141,6 +141,13 @@ class MediaLoaderPHP {
 				$loop = "loop";
 			}
 
+			if(!isset($args["autoplay"])){
+				$autoplay = "";
+			}
+			else{
+				$autoplay = "autoplay";
+			}
+
 			if(!isset($args["width"])){
 				$width = "";
 			}
@@ -180,12 +187,12 @@ class MediaLoaderPHP {
 			if($filetype == "audio"){
 				if(!$load){
 					return "<div class='MediaLoaderOuter'>
-					<audio class='MediaLoader MediaLoaderAudio MediaLoaderToSet' src='$href' volume='$volume' controls $loop></audio>
+					<audio class='MediaLoader MediaLoaderAudio MediaLoaderToSet' $autoplay src='$href' volume='$volume' controls $loop></audio>
 					</div>";
 				}
 				else{
 					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $autoplay type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
 					<div class='MediaLinkText'>$mediaoutput</div>
 					</div>";
 				}
@@ -193,12 +200,12 @@ class MediaLoaderPHP {
 			if($filetype == "video"){
 				if(!$load){
 					return "<div class='MediaLoaderOuter'>
-					<video class='MediaLoader MediaLoaderVideo MediaLoaderToSet' src='$href' volume='$volume' controls $loop $width $height></video>
+					<video class='MediaLoader MediaLoaderVideo MediaLoaderToSet' $autoplay src='$href' volume='$volume' controls $loop $width $height></video>
 					</div>";
 				}
 				else{
 					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $autoplay $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
 					<div class='MediaLinkText'>$mediaoutput</div>
 					</div>";
 				}

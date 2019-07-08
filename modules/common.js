@@ -46,6 +46,7 @@ $(function () {
         var el = $(this).parent();
         var volume = el.attr("volume");
         var loop = el.attr("loop");
+        var auto = el.attr("autoplay");
         var src = el.attr("src");
         var unloadtext = el.attr("unloadtext");
         if (loop != undefined) {
@@ -53,7 +54,12 @@ $(function () {
         } else {
             loop = "";
         }
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><audio src='" + src + "' " + loop + " controls></audio>");
+        if (auto != undefined) {
+            auto = "autoplay";
+        } else {
+            auto = "";
+        }
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><audio src='" + src + "' " + loop + " " + auto + " controls></audio>");
         var child = el.children()[0];
         child.onclick = UnloadAudio;
         el.children()[2].volume = volume;
@@ -69,6 +75,7 @@ $(function () {
         var el = $(this).parent();
         var volume = el.attr("volume");
         var loop = el.attr("loop");
+        var auto = el.attr("autoplay");
         var src = el.attr("src");
         var width = el.attr("width");
         var height = el.attr("height");
@@ -77,6 +84,11 @@ $(function () {
             loop = "loop";
         } else {
             loop = "";
+        }
+        if (auto != undefined) {
+            auto = "autoplay";
+        } else {
+            auto = "";
         }
         if (width != undefined) {
             width = "width='" + width + "'"
@@ -88,7 +100,7 @@ $(function () {
         } else {
             height = "";
         }
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><video src='" + src + "' " + loop + " controls " + width + " " + height + "></video>");
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><video src='" + src + "' " + loop + " " + auto + " controls " + width + " " + height + "></video>");
         var child = el.children()[0];
         child.onclick = UnloadVideo;
         el.children()[2].volume = volume;
