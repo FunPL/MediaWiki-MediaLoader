@@ -27,45 +27,45 @@ $(function () {
     //Execute for performance reasons
     $(".MediaLoaderToSet").each(ToSet)
 
-    function LoadImage(){
+    function LoadImage() {
         var el = $(this).parent();
         var image = el.attr("image");
         var unloadtext = el.attr("unloadtext");
-        el.html("<span class='MediaUnloadText'>"+unloadtext+"</span><br>"+image);
-        var child = el.children();
-        child.click(UnloadImage);
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br>" + image);
+        var child = el.children()[0];
+        child.onclick = UnloadImage;
     }
-    function UnloadImage(){
+    function UnloadImage() {
         var el = $(this).parent();
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
-        el.children(0).click(LoadImage)
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
+        el.children().click(LoadImage)
     }
 
-    function LoadAudio(){
+    function LoadAudio() {
         var el = $(this).parent();
         var volume = el.attr("volume");
         var loop = el.attr("loop");
         var src = el.attr("src");
         var unloadtext = el.attr("unloadtext");
-        if(loop != undefined){
+        if (loop != undefined) {
             loop = "loop";
-        }else{
+        } else {
             loop = "";
         }
-        el.html("<span class='MediaUnloadText'>"+unloadtext+"</span><br><audio src='"+src+"' "+loop+" controls></audio>");
-        var child = el.children();
-        child.click(UnloadAudio);
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><audio src='" + src + "' " + loop + " controls></audio>");
+        var child = el.children()[0];
+        child.onclick = UnloadAudio;
         el.children()[2].volume = volume;
     }
-    function UnloadAudio(){
+    function UnloadAudio() {
         var el = $(this).parent();
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
-        el.children(0).click(LoadAudio)
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
+        el.children().click(LoadAudio)
     }
 
-    function LoadVideo(){
+    function LoadVideo() {
         var el = $(this).parent();
         var volume = el.attr("volume");
         var loop = el.attr("loop");
@@ -73,47 +73,47 @@ $(function () {
         var width = el.attr("width");
         var height = el.attr("height");
         var unloadtext = el.attr("unloadtext");
-        if(loop != undefined){
+        if (loop != undefined) {
             loop = "loop";
-        }else{
+        } else {
             loop = "";
         }
-        if(width != undefined){
-            width = "width='"+width+"'"
-        }else{
+        if (width != undefined) {
+            width = "width='" + width + "'"
+        } else {
             width = "";
         }
-        if(height != undefined){
-            height = "height='"+height+"'"
-        }else{
+        if (height != undefined) {
+            height = "height='" + height + "'"
+        } else {
             height = "";
         }
-        el.html("<span class='MediaUnloadText'>"+unloadtext+"</span><br><video src='"+src+"' "+loop+" controls "+width+" "+height+"></video>");
-        var child = el.children();
-        child.click(UnloadVideo);
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span><br><video src='" + src + "' " + loop + " controls " + width + " " + height + "></video>");
+        var child = el.children()[0];
+        child.onclick = UnloadVideo;
         el.children()[2].volume = volume;
     }
-    function UnloadVideo(){
+    function UnloadVideo() {
         var el = $(this).parent();
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
-        el.children(0).click(LoadVideo)
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
+        el.children().click(LoadVideo)
     }
 
     function ToPrepareLoad() {
         var el = $(this);
         var loadtext = el.attr("loadtext");
         var type = el.attr("type");
-        if(type == "image"){
-            el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
+        if (type == "image") {
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
             el.children(0).click(LoadImage)
         }
-        else if(type == "audio"){
-            el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
+        else if (type == "audio") {
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
             el.children(0).click(LoadAudio)
         }
-        else if(type == "video"){
-            el.html("<span class='MediaLoadText'>"+loadtext+"</span>");
+        else if (type == "video") {
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span>");
             el.children(0).click(LoadVideo)
         }
     }
