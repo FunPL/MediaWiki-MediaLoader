@@ -15,7 +15,7 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		$version = file_get_contents("https://raw.githubusercontent.com/FunPL/MediaWiki-MediaLoader/master/version.txt");
 
 		if(isset($version)){
-			if($version == "0.3"){
+			if($version == "0.3.1"){
 				$update = "";
 			}
 			else{
