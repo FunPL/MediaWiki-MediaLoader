@@ -195,13 +195,13 @@ class MediaLoaderPHP {
 
 			$lt = explode('{file}', $wgMediaLoaderLoadText);
 			$ut = explode('{file}', $wgMediaLoaderUnloadText);
-			if(array_count_values($lt) != 1){
+			if(count($lt) != 1){
 				$lt = str_replace("{file}", $name, $wgMediaLoaderLoadText);
 			}
 			else{
 				$lt = $wgMediaLoaderLoadText.$name;
 			}
-			if(array_count_values($ut) != 1){
+			if(count($ut) != 1){
 				$ut = str_replace("{file}", $name, $wgMediaLoaderUnloadText);
 			}
 			else{
@@ -217,7 +217,7 @@ class MediaLoaderPHP {
 				}
 				else{
 					return "<div class='MediaLoaderOuter MediaLoaderImage MediaLoad'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' type='image' group='$group' image='$readyimage' loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' type='image' group='$group' image='$readyimage' loadtext='$lt' unloadtext='$ut'>
 					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
 					</div></div>".elapsed($starttime);
 				}
@@ -230,7 +230,7 @@ class MediaLoaderPHP {
 				}
 				else{
 					return "<div class='MediaLoaderOuter MediaLoaderAudio MediaLoad'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$lt' unloadtext='$ut'>
 					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
 					</div></div>".elapsed($starttime);
 				}
@@ -243,7 +243,7 @@ class MediaLoaderPHP {
 				}
 				else{
 					return "<div class='MediaLoaderOuter MediaLoaderVideo MediaLoad'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$lt' unloadtext='$ut'>
 					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
 					</div></div>".elapsed($starttime);
 				}
@@ -273,16 +273,16 @@ class MediaLoaderPHP {
 			$name = $i;
 		}
 		if($input != ""){
-			$lt = explode('{file}', $wgMediaLoaderLoadAllGroupText);
-			$ut = explode('{file}', $wgMediaLoaderUnloadAllGroupText);
-			if(array_count_values($lt) != 1){
-				$lt = str_replace("{file}", $name, $wgMediaLoaderLoadAllGroupText);
+			$lt = explode('{group}', $wgMediaLoaderLoadAllGroupText);
+			$ut = explode('{group}', $wgMediaLoaderUnloadAllGroupText);
+			if(count($lt) != 1){
+				$lt = str_replace("{group}", $name, $wgMediaLoaderLoadAllGroupText);
 			}
 			else{
 				$lt = $wgMediaLoaderLoadAllText.$name;
 			}
-			if(array_count_values($ut) != 1){
-				$ut = str_replace("{file}", $name, $wgMediaLoaderUnloadAllGroupText);
+			if(count($ut) != 1){
+				$ut = str_replace("{group}", $name, $wgMediaLoaderUnloadAllGroupText);
 			}
 			else{
 				$ut = $wgMediaLoaderUnloadAllText.$name;
