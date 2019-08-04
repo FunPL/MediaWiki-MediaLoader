@@ -20,13 +20,10 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		$output = $this->getOutput();
 		$this->setHeaders();
 
-		# Get request data from, e.g.
-		$param = $request->getText( 'param' );
-
 		$version = file_get_contents("https://raw.githubusercontent.com/FunPL/MediaWiki-MediaLoader/master/version.txt");
 
 		if(isset($version)){
-			if($version == "0.4"){
+			if($version == "0.4.1"){
 				$update = "";
 			}
 			else{

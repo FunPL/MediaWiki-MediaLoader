@@ -1,20 +1,28 @@
 <?php
-
-
+//Error "constant"
 function error(String $msg, Parser $parser, PPFrame $frame){
 	$syntax = $parser->recursiveTagParse("[[Special:MediaLoaderSyntax|Correct syntax]]", $frame);
 	return "MediaLoader Error: $msg $syntax";
 }
 
+//Get elapsed time
 function elapsed($time){
 	$diff = microtime(true) - $time;
 	return "<div style='display:none'>MediaLoader Performance log<br>Time elapsed: $diff</div>";
 }
+
+//Remove quotes for security reasons
+function removeQuotes($str){
+	$str2 = str_replace("\"", " ", $str);
+	$str2 = str_replace("'", " ", $str2);
+	return $str2;
+}
 class MediaLoaderPHP {
+	//Add js + css + broken function
 	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
 		$output = $out->getOutput();
 		$output->addModules( 'ext.mediaLoader' );
-		$output->addModuleStyles('ext.mediaLoader');
+		$output->addModuleStyles('ext.mediaLoader');/*
 		$html = $output->getHTML();
 		$dom = new DOMDocument;
 		libxml_use_internal_errors(true);
@@ -55,13 +63,13 @@ class MediaLoaderPHP {
 			}
 			if($filetype == "video"){
 				$node2child->textContent = "<div class='MediaLoaderOuter'>
-					<video class='MediaLoader MediaLoaderAudio' src='$href' controls width='500px'></video>
+					<video class='MediaLoader MediaLoaderVideo' src='$href' controls width='500px'></video>
 					</div>";
 				$readyhtml = $dom->saveHTML($dom->getElementsByTagName("body")[0]->textContent);
 				$output->clearHTML();
 				$output->addHTML(substr($readyhtml, 6, strlen($readyhtml)-13));
 			}
-		}
+		}*/
 	}
 	
 	// Register any render callbacks with the parser
@@ -69,8 +77,9 @@ class MediaLoaderPHP {
 		$parser->setHook( 'media', [ self::class, 'renderTagMedia' ] );
 		$parser->setHook( 'mediagroup', [ self::class, 'renderTagMediaGroup' ] );
 	}
-	
+	//Render <media>
 	public static function renderTagMedia( $input, array $args, Parser $parser, PPFrame $frame ) {
+		//Initial values
 		$starttime = microtime(true); // Calculate time elapsed
 		global $wgMediaLoaderLoadText;
 		global $wgMediaLoaderUnloadText;
@@ -84,7 +93,10 @@ class MediaLoaderPHP {
 			'bmp' => 'image',
 			'mp4' => 'video'
 		);
+
+		//Check if the name provided is a file
 		if(substr($input, 0, 5) === "File:"){
+			//Try to get the file url
 			$filename = substr($input, 5);
 			$mediaoutput = $parser->recursiveTagParse( "[[Media:".$filename."]]", $frame );
 			$dom = new DOMDocument;
@@ -102,9 +114,12 @@ class MediaLoaderPHP {
 			$href = $node->getAttribute( 'href' );
 			$class = $node->getAttribute( 'class' );
 			if($class == "new"){
+				//New file
 				$parsed = $parser->recursiveTagParse("[[File:".$filename."]]", $frame);
 				return error("File $parsed does not exist!", $parser, $frame);
 			}
+
+			//Check extension
 			$hrefsplit = explode(".", $href);
 			$fileext = end($hrefsplit);
 			if(!isset($allowedtypes[$fileext])){
@@ -112,6 +127,7 @@ class MediaLoaderPHP {
 			}
 			$filetype = $allowedtypes[$fileext];
 
+			//Handle all args
 			if(!isset($args["load"])){
 				$load = false;
 			}
@@ -128,6 +144,7 @@ class MediaLoaderPHP {
 					$group = $group.'/';
 				}
 			}
+			$group = htmlentities($group);
 
 			if(!isset($args["name"])){
 				$name = $filename;
@@ -135,6 +152,7 @@ class MediaLoaderPHP {
 			else{
 				$name = $args["name"];
 			}
+			$name = htmlentities($name);
 
 			if(!isset($args["volume"])){
 				$volume = 1;
@@ -142,6 +160,7 @@ class MediaLoaderPHP {
 			else{
 				$volume = $args["volume"];
 			}
+			$volume = htmlentities($volume);
 
 			if(!isset($args["loop"])){
 				$loop = "";
@@ -161,14 +180,14 @@ class MediaLoaderPHP {
 				$width = "";
 			}
 			else{
-				$width = "width='".$args["width"]."'";
+				$width = "width='".htmlentities($args["width"])."'";
 			}
 
 			if(!isset($args["height"])){
 				$height = "";
 			}
 			else{
-				$height = "height='".$args["height"]."'";
+				$height = "height='".htmlentities($args["height"])."'";
 			}
 
 			if(!isset($args["args"])){
@@ -176,8 +195,10 @@ class MediaLoaderPHP {
 			}
 			else{
 				$uargs = str_replace(" ", "|", $args["args"]);
+				$uargs = removeQuotes($uargs);
 			}
 
+			//Get direct file link
 			$mediaoutput = $parser->recursiveTagParse( "[[:$input]]", $frame );
 			$dom = new DOMDocument;
 			libxml_use_internal_errors(true);
@@ -193,6 +214,7 @@ class MediaLoaderPHP {
 			}
 			$li = $node->getAttribute( 'href' );
 
+			//Get load/unload text for both files
 			$lt = explode('{file}', $wgMediaLoaderLoadText);
 			$ut = explode('{file}', $wgMediaLoaderUnloadText);
 			if(count($lt) != 1){
@@ -208,6 +230,7 @@ class MediaLoaderPHP {
 				$ut = $wgMediaLoaderUnloadText.$name;
 			}
 
+			//Return ready file based on type
 			if($filetype == "image"){
 				$readyimage = $parser->recursiveTagParse("[[File:$filename|$uargs]]");
 				if(!$load){
@@ -253,12 +276,16 @@ class MediaLoaderPHP {
 			return error("Not a file!", $parser, $frame);
 		}
 	}
+	//Render <mediagroup>
 	public static function renderTagMediaGroup( $input, array $args, Parser $parser, PPFrame $frame ) {
+		//Vars
 		$starttime = microtime(true); // Calculate time elapsed
 		global $wgMediaLoaderLoadAllText;
 		global $wgMediaLoaderUnloadAllText;
 		global $wgMediaLoaderLoadAllGroupText;
 		global $wgMediaLoaderUnloadAllGroupText;
+
+		//Check if the person added a subgroup
 		if(strpos($input, '/') !== false){
 			$ia = explode('/', $input);
 			$i = end($ia);
@@ -266,13 +293,18 @@ class MediaLoaderPHP {
 		else{
 			$i = $input;
 		}
+
+		//Check for a name
 		if(isset($args["name"])){
 			$name = $args["name"];
 		}
 		else{
 			$name = $i;
 		}
+
+		//Check for a group
 		if($input != ""){
+			//Get the texts for Loading and replace the {group}
 			$lt = explode('{group}', $wgMediaLoaderLoadAllGroupText);
 			$ut = explode('{group}', $wgMediaLoaderUnloadAllGroupText);
 			if(count($lt) != 1){
@@ -289,6 +321,7 @@ class MediaLoaderPHP {
 			}
 		}
 		else{
+			//Set the vars
 			$lt = $wgMediaLoaderLoadAllText;
 			$ut = $wgMediaLoaderUnloadAllText;
 		}

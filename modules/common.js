@@ -3,6 +3,7 @@ $(function () {
     window.mediaLoader.groups = {};
 
     //Define functions
+    //Find value in object by prefix
     function findValueByPrefix(object, prefix) {
         var result = [];
         for (var property in object) {
@@ -11,6 +12,13 @@ $(function () {
             }
         }
         return result;
+    }
+
+    //HTML encode
+    function htmlEncode(str) {
+        let elt = document.createElement('span'); 
+        elt.textContent = str; 
+        return elt.innerHTML;
     }
 
     //To add ID handler
@@ -42,15 +50,17 @@ $(function () {
     function LoadImage() {
         var el = $(this).parent();
         var image = el.attr("image");
-        var unloadtext = el.attr("unloadtext");
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br>" + image);
+        var unloadtext = htmlEncode(el.attr("unloadtext"));
+        var file = htmlEncode(el.attr("file"));
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + file + "'>🔗</a><br>" + image);
         var child = el.children()[0];
         child.onclick = UnloadImage;
     }
     function UnloadImage() {
         var el = $(this).parent();
-        var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        var loadtext = htmlEncode(el.attr("loadtext"));
+        var file = htmlEncode(el.attr("file"));
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + file + "'>🔗</a>");
         el.children().click(LoadImage)
     }
 
@@ -59,8 +69,8 @@ $(function () {
         var volume = el.attr("volume");
         var loop = el.attr("loop");
         var auto = el.attr("autoplay");
-        var src = el.attr("src");
-        var unloadtext = el.attr("unloadtext");
+        var src = htmlEncode(el.attr("src"));
+        var unloadtext = htmlEncode(el.attr("unloadtext"));
         if (loop != undefined) {
             loop = "loop";
         } else {
@@ -71,15 +81,17 @@ $(function () {
         } else {
             auto = "";
         }
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br><audio src='" + src + "' " + loop + " " + auto + " controls></audio>");
+        var file = htmlEncode(el.attr("file"));
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + file + "'>🔗</a><br><audio src='" + src + "' " + loop + " " + auto + " controls></audio>");
         var child = el.children()[0];
         child.onclick = UnloadAudio;
         el.children()[3].volume = volume;
     }
     function UnloadAudio() {
         var el = $(this).parent();
-        var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        var loadtext = htmlEncode(el.attr("loadtext"));
+        var file = htmlEncode(el.attr("file"));
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + file + "'>🔗</a>");
         el.children().click(LoadAudio)
     }
 
@@ -88,10 +100,10 @@ $(function () {
         var volume = el.attr("volume");
         var loop = el.attr("loop");
         var auto = el.attr("autoplay");
-        var src = el.attr("src");
-        var width = el.attr("width");
-        var height = el.attr("height");
-        var unloadtext = el.attr("unloadtext");
+        var src = htmlEncode(el.attr("src"));
+        var width = htmlEncode(el.attr("width"));
+        var height = htmlEncode(el.attr("height"));
+        var unloadtext = htmlEncode(el.attr("unloadtext"));
         if (loop != undefined) {
             loop = "loop";
         } else {
@@ -112,28 +124,28 @@ $(function () {
         } else {
             height = "";
         }
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br><video src='" + src + "' " + loop + " " + auto + " controls " + width + " " + height + "></video>");
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a><br><video src='" + src + "' " + loop + " " + auto + " controls " + width + " " + height + "></video>");
         var child = el.children()[0];
         child.onclick = UnloadVideo;
         el.children()[3].volume = volume;
     }
     function UnloadVideo() {
         var el = $(this).parent();
-        var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        var loadtext = htmlEncode(el.attr("loadtext"));
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
         el.children().click(LoadVideo)
     }
 
     function ManualLoadImage(el) {
         var image = el.attr("image");
         var unloadtext = el.attr("unloadtext");
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br>" + image);
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a><br>" + image);
         var child = el.children()[0];
         child.onclick = UnloadImage;
     }
     function ManualUnloadImage(el) {
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
         el.children().click(LoadImage)
     }
 
@@ -151,16 +163,16 @@ $(function () {
         /*if (auto != undefined) {
             auto = "autoplay";
         } else {*/
-            auto = "";
+        auto = "";
         //}
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br><audio src='" + src + "' " + loop + " " + auto + " controls></audio>");
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a><br><audio src='" + src + "' " + loop + " " + auto + " controls></audio>");
         var child = el.children()[0];
         child.onclick = UnloadAudio;
         el.children()[3].volume = volume;
     }
     function ManualUnloadAudio(el) {
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
         el.children().click(LoadAudio)
     }
 
@@ -180,7 +192,7 @@ $(function () {
         /*if (auto != undefined) {
             auto = "autoplay";
         } else {*/
-            auto = "";
+        auto = "";
         //}
         if (width != undefined) {
             width = "width='" + width + "'"
@@ -192,31 +204,31 @@ $(function () {
         } else {
             height = "";
         }
-        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a><br><video src='" + src + "' " + loop + " " + auto + " controls " + width + " " + height + "></video>");
+        el.html("<span class='MediaUnloadText'>" + unloadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a><br><video src='" + src + "' " + loop + " " + auto + " controls " + width + " " + height + "></video>");
         var child = el.children()[0];
         child.onclick = UnloadVideo;
         el.children()[3].volume = volume;
     }
     function ManualUnloadVideo(el) {
         var loadtext = el.attr("loadtext");
-        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+        el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
         el.children().click(LoadVideo)
     }
 
     function LoadAll() {
         var el = $(this);
         var filter = [].concat.apply([], findValueByPrefix(window.mediaLoader.groups, el.attr("group")));
-        for(var el in filter){
+        for (var el in filter) {
             var e = filter[el];
-            var ele = $('.MediaLoaderID'+e);
+            var ele = $('.MediaLoaderID' + e);
             var type = ele.attr("type");
-            if(type == "audio"){
+            if (type == "audio") {
                 ManualLoadAudio(ele);
             }
-            else if(type == "image"){
+            else if (type == "image") {
                 ManualLoadImage(ele);
             }
-            else if(type == "video"){
+            else if (type == "video") {
                 ManualLoadVideo(ele);
             }
         }
@@ -225,17 +237,17 @@ $(function () {
     function UnloadAll() {
         var el = $(this);
         var filter = [].concat.apply([], findValueByPrefix(window.mediaLoader.groups, el.attr("group")));
-        for(var el in filter){
+        for (var el in filter) {
             var e = filter[el];
-            var ele = $('.MediaLoaderID'+e);
+            var ele = $('.MediaLoaderID' + e);
             var type = ele.attr("type");
-            if(type == "audio"){
+            if (type == "audio") {
                 ManualUnloadAudio(ele);
             }
-            else if(type == "image"){
+            else if (type == "image") {
                 ManualUnloadImage(ele);
             }
-            else if(type == "video"){
+            else if (type == "video") {
                 ManualUnloadVideo(ele);
             }
         }
@@ -248,18 +260,18 @@ $(function () {
         var group = el.attr("group");
         var mediaid = el.attr("mediaid")
         if (type == "image") {
-            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
             el.children()[0].onclick = LoadImage
         }
         else if (type == "audio") {
-            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
             el.children()[0].onclick = LoadAudio
         }
         else if (type == "video") {
-            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='"+el.attr("file")+"'>🔗</a>");
+            el.html("<span class='MediaLoadText'>" + loadtext + "</span> <a class='MediaLoadLink' href='" + el.attr("file") + "'>🔗</a>");
             el.children()[0].onclick = LoadVideo
         }
-        if(window.mediaLoader.groups[group] == null){
+        if (window.mediaLoader.groups[group] == null) {
             window.mediaLoader.groups[group] = [];
         }
         window.mediaLoader.groups[group].push(mediaid);
@@ -270,10 +282,10 @@ $(function () {
 
     function ToPrepareGroup() {
         var el = $(this);
-        var loadtext = el.attr("loadtext");
-        var unloadtext = el.attr("unloadtext");
-        var group = el.attr("group");
-        el.html("<span group='" + group + "' class='MediaLoadAllText'>" + loadtext + "</span><br><span group='" + group + "' class='MediaUnloadAllText'>" + unloadtext + "</span>");
+        var loadtext = htmlEncode(el.attr("loadtext"));
+        var unloadtext = htmlEncode(el.attr("unloadtext"));
+        var group = htmlEncode(el.attr("group"));
+        el.html("<span group='"+group+"' class='MediaLoadAllText'>" + loadtext + "</span><br><span group='" + group + "' class='MediaUnloadAllText'>" + unloadtext + "</span>");
         el.children()[0].onclick = LoadAll;
         el.children()[2].onclick = UnloadAll;
         el.removeClass("MediaLoaderGroupSet");
