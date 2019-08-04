@@ -21,8 +21,8 @@
 	"config": {
 		"MediaLoaderLoadText":"Load {file}",
 		"MediaLoaderUnloadText":"Unload {file}",
-		"MediaLoaderLoadAllGroupText":"Load all {file} files",
-		"MediaLoaderUnloadAllGroupText":"Unload all {file} files",
+		"MediaLoaderLoadAllGroupText":"Load all {group} files",
+		"MediaLoaderUnloadAllGroupText":"Unload all {group} files",
 		"MediaLoaderLoadAllText":"Load all files",
 		"MediaLoaderUnloadAllText":"Unload all files"
 	},
