@@ -5,6 +5,11 @@ function error(String $msg, Parser $parser, PPFrame $frame){
 	$syntax = $parser->recursiveTagParse("[[Special:MediaLoaderSyntax|Correct syntax]]", $frame);
 	return "MediaLoader Error: $msg $syntax";
 }
+
+function elapsed($time){
+	$diff = microtime(true) - $time;
+	return "<div style='display:none'>MediaLoader Performance log<br>Time elapsed: $diff</div>";
+}
 class MediaLoaderPHP {
 	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
 		$output = $out->getOutput();
@@ -61,11 +66,12 @@ class MediaLoaderPHP {
 	
 	// Register any render callbacks with the parser
 	public static function onParserFirstCallInit( Parser $parser ) {
-		// When the parser sees the <sample> tag, it executes renderTagSample (see below)
 		$parser->setHook( 'media', [ self::class, 'renderTagMedia' ] );
+		$parser->setHook( 'mediagroup', [ self::class, 'renderTagMediaGroup' ] );
 	}
 	
 	public static function renderTagMedia( $input, array $args, Parser $parser, PPFrame $frame ) {
+		$starttime = microtime(true); // Calculate time elapsed
 		global $wgMediaLoaderLoadText;
 		global $wgMediaLoaderUnloadText;
 		$allowedtypes = array(
@@ -118,6 +124,9 @@ class MediaLoaderPHP {
 			}
 			else{
 				$group = $args["group"];
+				if(substr($group, -1) != '/'){
+					$group = $group.'/';
+				}
 			}
 
 			if(!isset($args["name"])){
@@ -169,52 +178,123 @@ class MediaLoaderPHP {
 				$uargs = str_replace(" ", "|", $args["args"]);
 			}
 
+			$mediaoutput = $parser->recursiveTagParse( "[[:$input]]", $frame );
+			$dom = new DOMDocument;
+			libxml_use_internal_errors(true);
+			$dom->loadHTML($mediaoutput);
+			libxml_clear_errors();
+			$node = $dom->getElementsByTagName('a');
+			if(count($node) == 0){
+				return error("Not a file!", $parser, $frame);
+			}
+			$node = $node[0];
+			if(!$node->hasAttribute( 'href' )){
+				return error("Incorrect file!", $parser, $frame);
+			}
+			$li = $node->getAttribute( 'href' );
+
+			$lt = explode('{file}', $wgMediaLoaderLoadText);
+			$ut = explode('{file}', $wgMediaLoaderUnloadText);
+			if(array_count_values($lt) != 1){
+				$lt = str_replace("{file}", $name, $wgMediaLoaderLoadText);
+			}
+			else{
+				$lt = $wgMediaLoaderLoadText.$name;
+			}
+			if(array_count_values($ut) != 1){
+				$ut = str_replace("{file}", $name, $wgMediaLoaderUnloadText);
+			}
+			else{
+				$ut = $wgMediaLoaderUnloadText.$name;
+			}
+
 			if($filetype == "image"){
 				$readyimage = $parser->recursiveTagParse("[[File:$filename|$uargs]]");
 				if(!$load){
-					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderImage'>$readyimage</div>
-					</div>";
+					return "<div class='MediaLoaderOuter MediaLoaderImage'>
+					<div class='MediaLoaderInner MediaLoaderImage'>$readyimage</div>
+					</div>".elapsed($starttime);
 				}
 				else{
-					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' type='image' group='$group' image='$readyimage' loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
-					<div class='MediaLinkText'>$mediaoutput</div>
-					</div>
-					</div>";
+					return "<div class='MediaLoaderOuter MediaLoaderImage MediaLoad'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' type='image' group='$group' image='$readyimage' loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
+					</div></div>".elapsed($starttime);
 				}
 			}
 			if($filetype == "audio"){
 				if(!$load){
-					return "<div class='MediaLoaderOuter'>
+					return "<div class='MediaLoaderOuter MediaLoaderAudio'>
 					<audio class='MediaLoader MediaLoaderAudio MediaLoaderToSet' $autoplay src='$href' volume='$volume' controls $loop></audio>
-					</div>";
+					</div>".elapsed($starttime);
 				}
 				else{
-					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $autoplay type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
-					<div class='MediaLinkText'>$mediaoutput</div>
-					</div>";
+					return "<div class='MediaLoaderOuter MediaLoaderAudio MediaLoad'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay type='audio' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
+					</div></div>".elapsed($starttime);
 				}
 			}
 			if($filetype == "video"){
 				if(!$load){
-					return "<div class='MediaLoaderOuter'>
+					return "<div class='MediaLoaderOuter MediaLoaderVideo'>
 					<video class='MediaLoader MediaLoaderVideo MediaLoaderToSet' $autoplay src='$href' volume='$volume' controls $loop $width $height></video>
-					</div>";
+					</div>".elapsed($starttime);
 				}
 				else{
-					return "<div class='MediaLoaderOuter'>
-					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' $autoplay $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
-					<div class='MediaLinkText'>$mediaoutput</div>
-					</div>";
+					return "<div class='MediaLoaderOuter MediaLoaderVideo MediaLoad'>
+					<div class='MediaLoader MediaLoaderInner MediaLoad MediaLoaderID' file='$li' $autoplay $width $height type='video' group='$group' src='$href' volume='$volume' $loop loadtext='$wgMediaLoaderLoadText$name' unloadtext='$wgMediaLoaderUnloadText$name'>
+					<div class='MediaLoader MediaLoaderInner MediaLinkText'>$mediaoutput</div>
+					</div></div>".elapsed($starttime);
 				}
 			}
-			return htmlspecialchars($uargs);
 		}
 		else{
 			return error("Not a file!", $parser, $frame);
 		}
+	}
+	public static function renderTagMediaGroup( $input, array $args, Parser $parser, PPFrame $frame ) {
+		$starttime = microtime(true); // Calculate time elapsed
+		global $wgMediaLoaderLoadAllText;
+		global $wgMediaLoaderUnloadAllText;
+		global $wgMediaLoaderLoadAllGroupText;
+		global $wgMediaLoaderUnloadAllGroupText;
+		if(strpos($input, '/') !== false){
+			$ia = explode('/', $input);
+			$i = end($ia);
+		}
+		else{
+			$i = $input;
+		}
+		if(isset($args["name"])){
+			$name = $args["name"];
+		}
+		else{
+			$name = $i;
+		}
+		if($input != ""){
+			$lt = explode('{file}', $wgMediaLoaderLoadAllGroupText);
+			$ut = explode('{file}', $wgMediaLoaderUnloadAllGroupText);
+			if(array_count_values($lt) != 1){
+				$lt = str_replace("{file}", $name, $wgMediaLoaderLoadAllGroupText);
+			}
+			else{
+				$lt = $wgMediaLoaderLoadAllText.$name;
+			}
+			if(array_count_values($ut) != 1){
+				$ut = str_replace("{file}", $name, $wgMediaLoaderUnloadAllGroupText);
+			}
+			else{
+				$ut = $wgMediaLoaderUnloadAllText.$name;
+			}
+		}
+		else{
+			$lt = $wgMediaLoaderLoadAllText;
+			$ut = $wgMediaLoaderUnloadAllText;
+		}
+		return "<div class='MediaLoaderOuter MediaLoaderGroupSet MediaLoader'>
+		<div class='MediaLoaderInner MediaLoader MediaLoaderGroupSet' group='$input' loadtext='$lt' unloadtext='$ut'></div>
+		</div>";
 	}
 }
 

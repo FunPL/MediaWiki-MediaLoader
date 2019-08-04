@@ -7,7 +7,7 @@
 	"descriptionmsg": "medialoader_desc",
 	"license-name": "GPL-2.0-or-later",
 	"type": "parserhook",
-	"version": "0.3.2",
+	"version": "0.4",
 	"requires": {
 		"MediaWiki": ">= 1.32.0"
 	},
@@ -19,8 +19,12 @@
 		"MediaLoaderPHP": "MediaLoader.php"
 	},
 	"config": {
-		"MediaLoaderLoadText":"Load ",
-		"MediaLoaderUnloadText":"Unload "
+		"MediaLoaderLoadText":"Load {file}",
+		"MediaLoaderUnloadText":"Unload {file}",
+		"MediaLoaderLoadAllGroupText":"Load all {file} files",
+		"MediaLoaderUnloadAllGroupText":"Unload all {file} files",
+		"MediaLoaderLoadAllText":"Load all files",
+		"MediaLoaderUnloadAllText":"Unload all files"
 	},
 	"Hooks": {
 		"ParserFirstCallInit": "MediaLoaderPHP::onParserFirstCallInit",
