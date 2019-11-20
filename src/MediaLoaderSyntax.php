@@ -19,53 +19,55 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		$request = $this->getRequest();
 		$output = $this->getOutput();
 		$this->setHeaders();
-		
+
+		# Do stuff
+		# ...
 		$wikitext = '<h2><nowiki><media></nowiki></h2>
-		<h3>Parameters</h3>
-		 <nowiki><media>File:example.png</media></nowiki>
-		<h4>For all</h4>
+		<h3>'.wfMessage( 'medialoader-syntax-word-params')->parse().'</h3>
+		 <nowiki>'.wfMessage( 'medialoader-syntax-media-example')->parse().'</nowiki>
+		<h4>'.wfMessage( 'medialoader-syntax-word-forall')->parse().'</h4>
 		{|class="wikitable"
 		|-
-		!Parameter!!Description!!Example
+		!'.wfMessage( 'medialoader-syntax-word-param')->parse().'!!'.wfMessage( 'medialoader-syntax-word-desc')->parse().'!!'.wfMessage( 'medialoader-syntax-word-example')->parse().'
 		|-
-		|load||If used theload feature of the MediaLoader will be activated||<nowiki><media load>File:example.png</media></nowiki>
+		|load||'.wfMessage( 'medialoader-syntax-media-all-load-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-all-load-example')->parse().'
 		|-
-		|name||(load required) Name of the file to be shown||<nowiki><media load name="example file">File:example.png</media></nowiki><br>Results in: Load example file
+		|name||'.wfMessage( 'medialoader-syntax-media-all-name-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-all-name-example')->parse().'
 		|-
-		|group||(load required) Load group||<nowiki><media group="example/pictures">File:example.png</media></nowiki>
+		|group||'.wfMessage( 'medialoader-syntax-media-all-group-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-all-group-example')->parse().'
 		|}
-		<h4>Image</h4>
+		<h4>'.wfMessage( 'medialoader-syntax-word-forimage')->parse().'</h4>
 		{|class="wikitable"
 		|-
-		!Parameter!!Description!!Example
+		!'.wfMessage( 'medialoader-syntax-word-param')->parse().'!!'.wfMessage( 'medialoader-syntax-word-desc')->parse().'!!'.wfMessage( 'medialoader-syntax-word-example')->parse().'
 		|-
-		|args||Picture arguments||<nowiki><media args="300px">File:example.png</media></nowiki><br><nowiki><media args="thumb">File:example.png</media></nowiki>
+		|args||'.wfMessage( 'medialoader-syntax-media-image-args-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-image-args-example')->parse().'
 		|}
-		<h4>Audio/Video</h4>
+		<h4>'.wfMessage( 'medialoader-syntax-word-foraudiovideo')->parse().'</h4>
 		{|class="wikitable"
 		|-
-		!Parameter!!Description!!Example
+		!'.wfMessage( 'medialoader-syntax-word-param')->parse().'!!'.wfMessage( 'medialoader-syntax-word-desc')->parse().'!!'.wfMessage( 'medialoader-syntax-word-example')->parse().'
 		|-
-		|volume||Volume||<nowiki><media volume="0.1">File:example.mp3</media></nowiki>
+		|volume||'.wfMessage( 'medialoader-syntax-media-audiovideo-volume-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-audiovideo-volume-example')->parse().'
 		|-
-		|loop||Loop||<nowiki><media loop>File:example.mp3</media></nowiki>
+		|loop||'.wfMessage( 'medialoader-syntax-media-audiovideo-loop-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-audiovideo-loop-example')->parse().'
 		|-
-		|width/height||Width/Height of the video file||<nowiki><media width="1000" height="400">File:example.mp4</media></nowiki>
+		|width/height||'.wfMessage( 'medialoader-syntax-media-audiovideo-widthheight-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-audiovideo-widthheight-example')->parse().'
 		|-
-		|autoplay||May not work without load due to browser rules||<nowiki><media autoplay>File:example.mp4</media></nowiki>
+		|autoplay||'.wfMessage( 'medialoader-syntax-media-audiovideo-autoplay-desc')->parse().'||'.wfMessage( 'medialoader-syntax-media-audiovideo-autoplay-example')->parse().'
 		|}
 		<h2><nowiki><mediagroup></nowiki></h2>
-		<h3>Parameters</h3>
-		 <nowiki><mediagroup>group/subgroup</mediagroup></nowiki>
-		<h4>For all</h4>
+		<h3>'.wfMessage( 'medialoader-syntax-word-params')->parse().'</h3>
+		 <nowiki>'.wfMessage( 'medialoader-syntax-mediagroup-example')->parse().'</nowiki>
+		<h4>'.wfMessage( 'medialoader-syntax-word-forall')->parse().'</h4>
 		{|class="wikitable"
 		|-
-		!Parameter!!Description!!Example
+		!'.wfMessage( 'medialoader-syntax-word-param')->parse().'!!'.wfMessage( 'medialoader-syntax-word-desc')->parse().'!!'.wfMessage( 'medialoader-syntax-word-example')->parse().'
 		|-
-		|name||Name to be shown||<nowiki><mediagroup name="example">group/subgroup</mediagroup></nowiki><br>Results in: Load all example files
+		|name||'.wfMessage( 'medialoader-syntax-mediagroup-all-name-desc')->parse().'||'.wfMessage( 'medialoader-syntax-mediagroup-all-name-example')->parse().'
 		|}
 		';
-		$output->setPageTitle("Media Loader Syntax");
+		$output->setPageTitle(wfMessage( 'medialoader-syntax-pagetitle')->parse());
 		$output->addWikiText( $wikitext );
 	}
 }
