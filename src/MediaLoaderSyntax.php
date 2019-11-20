@@ -19,24 +19,8 @@ class SpecialMediaLoaderSyntax extends SpecialPage {
 		$request = $this->getRequest();
 		$output = $this->getOutput();
 		$this->setHeaders();
-
-		$version = file_get_contents("https://raw.githubusercontent.com/FunPL/MediaWiki-MediaLoader/master/version.txt");
-
-		if(isset($version)){
-			if($version == "0.4.1"){
-				$update = "";
-			}
-			else{
-				$update = "<b>There is a new version of MediaLoader available at [https://github.com/FunPL/MediaWiki-MediaLoader/releases/latest GitHub]</b>\n";
-			}
-		}
-		else{
-			$update = "";
-		}
-
-		# Do stuff
-		# ...
-		$wikitext = $update.'<h2><nowiki><media></nowiki></h2>
+		
+		$wikitext = '<h2><nowiki><media></nowiki></h2>
 		<h3>Parameters</h3>
 		 <nowiki><media>File:example.png</media></nowiki>
 		<h4>For all</h4>
